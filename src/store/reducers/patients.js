@@ -5,6 +5,7 @@ const initialState = {
         content: [],
     },
     patient: {},
+    patientDialog: false,
 };
 
 const patientReducer = (state = initialState, action) => {
@@ -26,6 +27,11 @@ const patientReducer = (state = initialState, action) => {
                     ...state.patients,
                     content: [action.payload, ...state.patients.content],
                 },
+            };
+        case types.TOGGLE_PATIENT_DIALOG:
+            return {
+                ...state,
+                patientDialog: action.payload,
             };
         default:
             return state;

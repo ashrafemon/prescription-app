@@ -5,6 +5,7 @@ const initialState = {
         content: [],
     },
     disease: {},
+    diseaseDialog: false,
 };
 
 const diseaseReducer = (state = initialState, action) => {
@@ -26,6 +27,23 @@ const diseaseReducer = (state = initialState, action) => {
                     ...state.diseases,
                     content: [action.payload, ...state.diseases.content],
                 },
+            };
+        case types.DELETE_DISEASE:
+            return {
+                ...state,
+                diseases: {
+                    ...state.diseases,
+                    content: [
+                        ...state.diseases.content.filter(
+                            (item) => item.id !== action.payload
+                        ),
+                    ],
+                },
+            };
+        case types.TOGGLE_DISEASE_DIALOG:
+            return {
+                ...state,
+                diseaseDialog: action.payload,
             };
         default:
             return state;

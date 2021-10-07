@@ -5,6 +5,7 @@ const initialState = {
         content: [],
     },
     medicine: {},
+    medicineDialog: false,
 };
 
 const medicineReducer = (state = initialState, action) => {
@@ -26,6 +27,11 @@ const medicineReducer = (state = initialState, action) => {
                     ...state.medicines,
                     content: [action.payload, ...state.medicines.content],
                 },
+            };
+        case types.TOGGLE_MEDICINE_DIALOG:
+            return {
+                ...state,
+                medicineDialog: action.payload,
             };
         default:
             return state;

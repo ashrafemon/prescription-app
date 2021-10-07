@@ -2,7 +2,10 @@ import { Grid, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createDisease } from "../../store/actions/diseaseActions";
+import {
+    createDisease,
+    toggleDiseaseDialog,
+} from "../../store/actions/diseaseActions";
 import { DialogActionBtn } from "../../styles/globalStyles";
 
 const DiseaseForm = () => {
@@ -44,7 +47,12 @@ const DiseaseForm = () => {
     const submitHandler = (e) => {
         e.preventDefault();
 
-        dispatch(createDisease(form, resetForm()));
+        dispatch(
+            createDisease(form, () => {
+                resetForm();
+                dispatch(toggleDiseaseDialog(false));
+            })
+        );
     };
 
     return (

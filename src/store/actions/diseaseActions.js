@@ -1,6 +1,11 @@
 import apiUrl from "../../constants/apiUrl";
 import * as types from "./../types";
 
+export const toggleDiseaseDialog = (status) => ({
+    type: types.TOGGLE_DISEASE_DIALOG,
+    payload: status,
+});
+
 export const fetchDiseases =
     (page = 0) =>
     async (dispatch) => {
@@ -60,11 +65,19 @@ export const updateDoctor = () => async (dispatch) => {
         .catch((err) => console.log(err));
 };
 
-export const deleteDoctor = () => async (dispatch) => {
-    await fetch(apiUrl.doctors.index, {
-        method: "GET",
+export const deleteDisease = (id) => async (dispatch) => {
+    await fetch(apiUrl.diseases.delete + `?id=${id}`, {
+        method: "DELETE",
     })
         .then((res) => res.json())
-        .then((res) => console.log(res))
+        .then((res) => {
+            console.log(res);
+            if (res) {
+                dispatch({
+                    type: types.DELETE_DISEASE,
+                    payload: id,
+                });
+            }
+        })
         .catch((err) => console.log(err));
 };

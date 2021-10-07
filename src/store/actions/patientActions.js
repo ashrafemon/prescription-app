@@ -1,6 +1,11 @@
 import apiUrl from "../../constants/apiUrl";
 import * as types from "./../types";
 
+export const togglePatientDialog = (status) => ({
+    type: types.TOGGLE_PATIENT_DIALOG,
+    payload: status,
+});
+
 export const fetchPatients =
     (page = 0) =>
     async (dispatch) => {
@@ -18,12 +23,20 @@ export const fetchPatients =
             .catch((err) => console.log(err));
     };
 
-export const fetchDoctor = () => async (dispatch) => {
-    await fetch(apiUrl.doctors.index, {
+export const fetchPatient = (birthId) => async (dispatch) => {
+    await fetch(apiUrl.patients.show + `?birthId=${birthId}`, {
         method: "GET",
     })
         .then((res) => res.json())
-        .then((res) => console.log(res))
+        .then((res) => {
+            console.log(res);
+            if (Object.keys(res).length > 0) {
+                dispatch({
+                    type: types.FETCH_PATIENT,
+                    payload: res,
+                });
+            }
+        })
         .catch((err) => console.log(err));
 };
 
@@ -60,11 +73,19 @@ export const updateDoctor = () => async (dispatch) => {
         .catch((err) => console.log(err));
 };
 
-export const deleteDoctor = () => async (dispatch) => {
-    await fetch(apiUrl.doctors.index, {
-        method: "GET",
+export const deletePatient = (id) => async (dispatch) => {
+    await fetch(apiUrl.patients.delete + `?id=${id}`, {
+        method: "DELETE",
     })
         .then((res) => res.json())
-        .then((res) => console.log(res))
+        .then((res) => {
+            console.log(res);
+            if (res) {
+                dispatch({
+                    type: types.DELETE_PATIENT,
+                    payload: id,
+                });
+            }
+        })
         .catch((err) => console.log(err));
 };

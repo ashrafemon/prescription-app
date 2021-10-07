@@ -1,4 +1,4 @@
-import { AddCircleOutline, MoreVert } from "@mui/icons-material";
+import { AddCircleOutline } from "@mui/icons-material";
 import {
     Box,
     Pagination,
@@ -9,21 +9,19 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
-import PatientForm from "../components/Patients/PatientForm";
-import CrudDialog from "../components/shared/CrudDialog";
-import {
-    AppDataTable,
-    StatusBtn,
-    TableActionBtn,
-    TableIconActionBtn,
-    TitleAddButton,
-} from "../styles/globalStyles";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPatients } from "./../store/actions/patientActions";
+import PatientForm from "../components/Patients/PatientForm";
+import PatientItem from "../components/Patients/PatientItem";
+import CrudDialog from "../components/shared/CrudDialog";
+import { AppDataTable, TitleAddButton } from "../styles/globalStyles";
+import {
+    fetchPatients,
+    togglePatientDialog,
+} from "./../store/actions/patientActions";
 
 const Patients = () => {
-    const [patientDialog, setPatientDialog] = useState(false);
+    const { patientDialog } = useSelector((state) => state.patients);
     const dispatch = useDispatch();
     const { patients } = useSelector((state) => state.patients);
 
@@ -51,7 +49,7 @@ const Patients = () => {
                     <TitleAddButton
                         startIcon={<AddCircleOutline />}
                         variant="text"
-                        onClick={() => setPatientDialog(true)}
+                        onClick={() => dispatch(togglePatientDialog(true))}
                     >
                         Add Patient
                     </TitleAddButton>
@@ -75,32 +73,7 @@ const Patients = () => {
                         {patients &&
                             patients.content.length > 0 &&
                             patients.content.map((item, i) => (
-                                <TableRow>
-                                    <TableCell>{item.birthId}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.gender}</TableCell>
-                                    <TableCell>{item.dateOfBirth}</TableCell>
-                                    <TableCell>{item.mobile}</TableCell>
-                                    <TableCell>
-                                        <StatusBtn
-                                            disableElevation
-                                            variant="contained"
-                                        >
-                                            Active
-                                        </StatusBtn>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TableActionBtn
-                                            variant="outlined"
-                                            color="primary"
-                                        >
-                                            View Profile
-                                        </TableActionBtn>
-                                        <TableIconActionBtn>
-                                            <MoreVert />
-                                        </TableIconActionBtn>
-                                    </TableCell>
-                                </TableRow>
+                                <PatientItem item={item} key={i} />
                             ))}
                     </TableBody>
                 </AppDataTable>
@@ -116,7 +89,7 @@ const Patients = () => {
 
             <CrudDialog
                 open={patientDialog}
-                close={() => setPatientDialog(false)}
+                close={() => dispatch(togglePatientDialog(true))}
             >
                 <PatientForm />
             </CrudDialog>

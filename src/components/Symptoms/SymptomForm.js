@@ -2,7 +2,10 @@ import { Grid, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createSymptom } from "../../store/actions/symptomActions";
+import {
+    createSymptom,
+    toggleSymptomDialog,
+} from "../../store/actions/symptomActions";
 import { DialogActionBtn } from "../../styles/globalStyles";
 
 const SymptomForm = () => {
@@ -44,7 +47,12 @@ const SymptomForm = () => {
     const submitHandler = (e) => {
         e.preventDefault();
 
-        dispatch(createSymptom(form, resetForm()));
+        dispatch(
+            createSymptom(form, () => {
+                resetForm();
+                dispatch(toggleSymptomDialog(false));
+            })
+        );
     };
 
     return (

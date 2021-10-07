@@ -2,7 +2,10 @@ import { Autocomplete, Grid, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createDoctor } from "../../store/actions/doctorActions";
+import {
+    createDoctor,
+    toggleDoctorDialog,
+} from "../../store/actions/doctorActions";
 import { DialogActionBtn } from "../../styles/globalStyles";
 
 const DoctorForm = () => {
@@ -70,7 +73,12 @@ const DoctorForm = () => {
     const submitHandler = (e) => {
         e.preventDefault();
 
-        dispatch(createDoctor(form, resetForm()));
+        dispatch(
+            createDoctor(form, () => {
+                resetForm();
+                dispatch(toggleDoctorDialog(false));
+            })
+        );
     };
     return (
         <>

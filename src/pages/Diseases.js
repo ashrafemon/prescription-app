@@ -1,4 +1,4 @@
-import { AddCircleOutline, MoreVert } from "@mui/icons-material";
+import { AddCircleOutline } from "@mui/icons-material";
 import {
     Box,
     Pagination,
@@ -12,18 +12,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DiseaseForm from "../components/Diseases/DiseaseForm";
+import DiseaseItem from "../components/Diseases/DiseaseItem";
 import CrudDialog from "../components/shared/CrudDialog";
-import { fetchDiseases } from "../store/actions/diseaseActions";
 import {
-    AppDataTable,
-    StatusBtn,
-    TableActionBtn,
-    TableIconActionBtn,
-    TitleAddButton,
-} from "../styles/globalStyles";
+    fetchDiseases,
+    toggleDiseaseDialog,
+} from "../store/actions/diseaseActions";
+import { AppDataTable, TitleAddButton } from "../styles/globalStyles";
 
 const Diseases = () => {
-    const [diseaseDialog, setDiseaseDialog] = useState(false);
+    const { diseaseDialog } = useSelector((state) => state.diseases);
     const dispatch = useDispatch();
     const { diseases } = useSelector((state) => state.diseases);
 
@@ -51,7 +49,7 @@ const Diseases = () => {
                     <TitleAddButton
                         startIcon={<AddCircleOutline />}
                         variant="text"
-                        onClick={() => setDiseaseDialog(true)}
+                        onClick={() => dispatch(toggleDiseaseDialog(true))}
                     >
                         Add Disease
                     </TitleAddButton>
@@ -73,30 +71,7 @@ const Diseases = () => {
                         {diseases &&
                             diseases.content.length > 0 &&
                             diseases.content.map((item, i) => (
-                                <TableRow>
-                                    <TableCell>{item.id}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.details}</TableCell>
-                                    <TableCell>
-                                        <StatusBtn
-                                            disableElevation
-                                            variant="contained"
-                                        >
-                                            Active
-                                        </StatusBtn>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TableActionBtn
-                                            variant="outlined"
-                                            color="primary"
-                                        >
-                                            View Profile
-                                        </TableActionBtn>
-                                        <TableIconActionBtn>
-                                            <MoreVert />
-                                        </TableIconActionBtn>
-                                    </TableCell>
-                                </TableRow>
+                                <DiseaseItem item={item} key={i} />
                             ))}
                     </TableBody>
                 </AppDataTable>
@@ -112,7 +87,7 @@ const Diseases = () => {
 
             <CrudDialog
                 open={diseaseDialog}
-                close={() => setDiseaseDialog(false)}
+                close={() => dispatch(toggleDiseaseDialog(false))}
             >
                 <DiseaseForm />
             </CrudDialog>

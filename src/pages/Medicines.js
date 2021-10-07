@@ -1,4 +1,4 @@
-import { AddCircleOutline, MoreVert } from "@mui/icons-material";
+import { AddCircleOutline } from "@mui/icons-material";
 import {
     Box,
     Pagination,
@@ -12,18 +12,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MedicineForm from "../components/Medicines/MedicineForm";
+import MedicineItem from "../components/Medicines/MedicineItem";
 import CrudDialog from "../components/shared/CrudDialog";
-import { fetchMedicines } from "../store/actions/medicineActions";
 import {
-    AppDataTable,
-    StatusBtn,
-    TableActionBtn,
-    TableIconActionBtn,
-    TitleAddButton,
-} from "../styles/globalStyles";
+    fetchMedicines,
+    toggleMedicineDialog,
+} from "../store/actions/medicineActions";
+import { AppDataTable, TitleAddButton } from "../styles/globalStyles";
 
 const Medicines = () => {
-    const [medicineDialog, setMedicineDialog] = useState(false);
+    const { medicineDialog } = useSelector((state) => state.medicines);
     const { medicines } = useSelector((state) => state.medicines);
     const [page, setPage] = useState(0);
     const dispatch = useDispatch();
@@ -50,7 +48,7 @@ const Medicines = () => {
                     <TitleAddButton
                         startIcon={<AddCircleOutline />}
                         variant="text"
-                        onClick={() => setMedicineDialog(true)}
+                        onClick={() => dispatch(toggleMedicineDialog(true))}
                     >
                         Add Medicine
                     </TitleAddButton>
@@ -73,31 +71,7 @@ const Medicines = () => {
                         {medicines &&
                             medicines.content.length > 0 &&
                             medicines.content.map((item, i) => (
-                                <TableRow>
-                                    <TableCell>{item.id}</TableCell>
-                                    <TableCell>{item.category}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.strength}</TableCell>
-                                    <TableCell>
-                                        <StatusBtn
-                                            disableElevation
-                                            variant="contained"
-                                        >
-                                            Active
-                                        </StatusBtn>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TableActionBtn
-                                            variant="outlined"
-                                            color="primary"
-                                        >
-                                            View Profile
-                                        </TableActionBtn>
-                                        <TableIconActionBtn>
-                                            <MoreVert />
-                                        </TableIconActionBtn>
-                                    </TableCell>
-                                </TableRow>
+                                <MedicineItem item={item} key={i} />
                             ))}
                     </TableBody>
                 </AppDataTable>
@@ -113,7 +87,7 @@ const Medicines = () => {
 
             <CrudDialog
                 open={medicineDialog}
-                close={() => setMedicineDialog(false)}
+                close={() => dispatch(toggleMedicineDialog(true))}
             >
                 <MedicineForm />
             </CrudDialog>

@@ -1,41 +1,30 @@
 import apiUrl from "../../constants/apiUrl";
-import * as types from "./../types";
+import * as types from "../types";
 
-export const toggleDoctorDialog = (status) => ({
-    type: types.TOGGLE_DOCTOR_DIALOG,
+export const togglePrescriptionDialog = (status) => ({
+    type: types.TOGGLE_PRESCRIPTION_DIALOG,
     payload: status,
 });
 
-export const fetchDoctors =
-    (page = 0) =>
-    async (dispatch) => {
-        await fetch(apiUrl.doctors.index + `?offset=${page}&size=10`, {
-            method: "GET",
-        })
-            .then((res) => res.json())
-            .then((res) => {
-                console.log(res);
-                dispatch({
-                    type: types.FETCH_DOCTORS,
-                    payload: res,
-                });
-            })
-            .catch((err) => console.log(err));
-    };
-
-export const fetchDoctor = () => async (dispatch) => {
-    await fetch(apiUrl.doctors.index, {
+export const fetchPrescriptions = (birthId) => async (dispatch) => {
+    await fetch(apiUrl.prescriptions.index + `?birthId=${birthId}`, {
         method: "GET",
     })
         .then((res) => res.json())
-        .then((res) => console.log(res))
+        .then((res) => {
+            console.log(res);
+            dispatch({
+                type: types.FETCH_PRESCRIPTIONS,
+                payload: res,
+            });
+        })
         .catch((err) => console.log(err));
 };
 
-export const createDoctor =
+export const createNewPrescription =
     (data, cb = () => {}) =>
     async (dispatch) => {
-        await fetch(apiUrl.doctors.create, {
+        await fetch(apiUrl.prescriptions.create, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -47,7 +36,31 @@ export const createDoctor =
                 console.log(res);
                 if (Object.keys(res).length > 0) {
                     dispatch({
-                        type: types.CREATE_DOCTOR,
+                        type: types.CREATE_PRESCRIPTION,
+                        payload: res,
+                    });
+                    cb();
+                }
+            })
+            .catch((err) => console.log(err));
+    };
+
+export const createOldPrescription =
+    (data, cb = () => {}) =>
+    async (dispatch) => {
+        await fetch(apiUrl.prescriptions.createInOld, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                console.log(res);
+                if (Object.keys(res).length > 0) {
+                    dispatch({
+                        type: types.CREATE_PRESCRIPTION,
                         payload: res,
                     });
                     cb();
@@ -65,8 +78,8 @@ export const updateDoctor = () => async (dispatch) => {
         .catch((err) => console.log(err));
 };
 
-export const deleteDoctor = (id) => async (dispatch) => {
-    await fetch(apiUrl.doctors.delete + `?id=${id}`, {
+export const deleteDisease = (id) => async (dispatch) => {
+    await fetch(apiUrl.diseases.delete + `?id=${id}`, {
         method: "DELETE",
     })
         .then((res) => res.json())
@@ -74,7 +87,7 @@ export const deleteDoctor = (id) => async (dispatch) => {
             console.log(res);
             if (res) {
                 dispatch({
-                    type: types.DELETE_DOCTOR,
+                    type: types.DELETE_DISEASE,
                     payload: id,
                 });
             }

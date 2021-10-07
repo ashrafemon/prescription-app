@@ -1,6 +1,11 @@
 import apiUrl from "../../constants/apiUrl";
 import * as types from "./../types";
 
+export const toggleMedicineDialog = (status) => ({
+    type: types.TOGGLE_MEDICINE_DIALOG,
+    payload: status,
+});
+
 export const fetchMedicines =
     (page = 0) =>
     async (dispatch) => {
@@ -60,11 +65,19 @@ export const updateDoctor = () => async (dispatch) => {
         .catch((err) => console.log(err));
 };
 
-export const deleteDoctor = () => async (dispatch) => {
-    await fetch(apiUrl.doctors.index, {
-        method: "GET",
+export const deleteMedicine = (id) => async (dispatch) => {
+    await fetch(apiUrl.medicines.delete + `?id=${id}`, {
+        method: "DELETE",
     })
         .then((res) => res.json())
-        .then((res) => console.log(res))
+        .then((res) => {
+            console.log(res);
+            if (res) {
+                dispatch({
+                    type: types.DELETE_MEDICINE,
+                    payload: id,
+                });
+            }
+        })
         .catch((err) => console.log(err));
 };

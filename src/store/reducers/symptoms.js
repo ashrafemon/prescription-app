@@ -5,6 +5,7 @@ const initialState = {
         content: [],
     },
     symptom: {},
+    symptomDialog: false,
 };
 
 const symptomReducer = (state = initialState, action) => {
@@ -26,6 +27,11 @@ const symptomReducer = (state = initialState, action) => {
                     ...state.symptoms,
                     content: [action.payload, ...state.symptoms.content],
                 },
+            };
+        case types.TOGGLE_SYMPTOM_DIALOG:
+            return {
+                ...state,
+                symptomDialog: action.payload,
             };
         default:
             return state;

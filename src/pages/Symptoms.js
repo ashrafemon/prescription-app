@@ -1,4 +1,4 @@
-import { AddCircleOutline, MoreVert } from "@mui/icons-material";
+import { AddCircleOutline } from "@mui/icons-material";
 import {
     Box,
     Pagination,
@@ -13,17 +13,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CrudDialog from "../components/shared/CrudDialog";
 import SymptomForm from "../components/Symptoms/SymptomForm";
-import { fetchSymptoms } from "../store/actions/symptomActions";
+import SymptomItem from "../components/Symptoms/SymptomItem";
 import {
-    AppDataTable,
-    StatusBtn,
-    TableActionBtn,
-    TableIconActionBtn,
-    TitleAddButton,
-} from "../styles/globalStyles";
+    fetchSymptoms,
+    toggleSymptomDialog,
+} from "../store/actions/symptomActions";
+import { AppDataTable, TitleAddButton } from "../styles/globalStyles";
 
 const Symptoms = () => {
-    const [symptomDialog, setSymptomDialog] = useState(false);
+    const { symptomDialog } = useSelector((state) => state.symptoms);
     const dispatch = useDispatch();
     const { symptoms } = useSelector((state) => state.symptoms);
     const [page, setPage] = useState(0);
@@ -50,7 +48,7 @@ const Symptoms = () => {
                     <TitleAddButton
                         startIcon={<AddCircleOutline />}
                         variant="text"
-                        onClick={() => setSymptomDialog(true)}
+                        onClick={() => dispatch(toggleSymptomDialog(true))}
                     >
                         Add Symptom
                     </TitleAddButton>
@@ -72,30 +70,7 @@ const Symptoms = () => {
                         {symptoms &&
                             symptoms.content.length > 0 &&
                             symptoms.content.map((item, i) => (
-                                <TableRow>
-                                    <TableCell>{item.id}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.details}</TableCell>
-                                    <TableCell>
-                                        <StatusBtn
-                                            disableElevation
-                                            variant="contained"
-                                        >
-                                            Active
-                                        </StatusBtn>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TableActionBtn
-                                            variant="outlined"
-                                            color="primary"
-                                        >
-                                            View Profile
-                                        </TableActionBtn>
-                                        <TableIconActionBtn>
-                                            <MoreVert />
-                                        </TableIconActionBtn>
-                                    </TableCell>
-                                </TableRow>
+                                <SymptomItem item={item} key={i} />
                             ))}
                     </TableBody>
                 </AppDataTable>
@@ -111,7 +86,7 @@ const Symptoms = () => {
 
             <CrudDialog
                 open={symptomDialog}
-                close={() => setSymptomDialog(false)}
+                close={() => dispatch(toggleSymptomDialog(true))}
             >
                 <SymptomForm />
             </CrudDialog>

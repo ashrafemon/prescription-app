@@ -1,4 +1,4 @@
-import { AddCircleOutline, MoreVert } from "@mui/icons-material";
+import { AddCircleOutline } from "@mui/icons-material";
 import {
     Box,
     Pagination,
@@ -12,18 +12,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DoctorForm from "../components/Doctors/DoctorForm";
+import DoctorItem from "../components/Doctors/DoctorItem";
 import CrudDialog from "../components/shared/CrudDialog";
-import { fetchDoctors } from "../store/actions/doctorActions";
 import {
-    AppDataTable,
-    StatusBtn,
-    TableActionBtn,
-    TableIconActionBtn,
-    TitleAddButton,
-} from "../styles/globalStyles";
+    fetchDoctors,
+    toggleDoctorDialog,
+} from "../store/actions/doctorActions";
+import { AppDataTable, TitleAddButton } from "../styles/globalStyles";
 
 const Doctors = () => {
-    const [doctorDialog, setDoctorDialog] = useState(false);
+    const { doctorDialog } = useSelector((state) => state.doctors);
     const dispatch = useDispatch();
     const { doctors } = useSelector((state) => state.doctors);
 
@@ -51,7 +49,7 @@ const Doctors = () => {
                     <TitleAddButton
                         startIcon={<AddCircleOutline />}
                         variant="text"
-                        onClick={() => setDoctorDialog(true)}
+                        onClick={() => dispatch(toggleDoctorDialog(true))}
                     >
                         Add Doctor
                     </TitleAddButton>
@@ -75,32 +73,7 @@ const Doctors = () => {
                         {doctors &&
                             doctors.content.length > 0 &&
                             doctors.content.map((item, i) => (
-                                <TableRow>
-                                    <TableCell>{item.doctorId}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.gender}</TableCell>
-                                    <TableCell>{item.designation}</TableCell>
-                                    <TableCell>{item.mobile}</TableCell>
-                                    <TableCell>
-                                        <StatusBtn
-                                            disableElevation
-                                            variant="contained"
-                                        >
-                                            Active
-                                        </StatusBtn>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TableActionBtn
-                                            variant="outlined"
-                                            color="primary"
-                                        >
-                                            View Profile
-                                        </TableActionBtn>
-                                        <TableIconActionBtn>
-                                            <MoreVert />
-                                        </TableIconActionBtn>
-                                    </TableCell>
-                                </TableRow>
+                                <DoctorItem item={item} key={i} />
                             ))}
                     </TableBody>
                 </AppDataTable>
@@ -116,7 +89,7 @@ const Doctors = () => {
 
             <CrudDialog
                 open={doctorDialog}
-                close={() => setDoctorDialog(false)}
+                close={() => dispatch(toggleDoctorDialog(false))}
             >
                 <DoctorForm />
             </CrudDialog>

@@ -8,6 +8,7 @@ import {
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Images } from "../../constants/themeData";
+import { fetchPatient } from "../../store/actions/patientActions";
 import {
     FullAvatar,
     SearchPatientText,
@@ -28,7 +29,7 @@ const SearchBox = () => {
     };
 
     const searchPatient = () => {
-        // dispatch();
+        dispatch(fetchPatient(form.birthId));
     };
 
     return (
@@ -70,7 +71,11 @@ const SearchBox = () => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment>
-                                <Button variant="contained" color="primary">
+                                <Button
+                                    onClick={searchPatient}
+                                    variant="contained"
+                                    color="primary"
+                                >
                                     Search
                                 </Button>
                             </InputAdornment>
